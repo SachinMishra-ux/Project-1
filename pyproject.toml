@@ -1,0 +1,17 @@
+[project]
+name = "project-1"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "dagshub>=0.7.0",
+    "fastapi>=0.136.0",
+    "groq>=1.2.0",
+    "mlflow>=1.27.0",
+    "pandas>=3.0.2",
+    "python-multipart>=0.0.26",
+    "scikit-learn>=1.8.0",
+    "sentence-transformers>=5.4.1",
+    "streamlit>=1.56.0",
+]
