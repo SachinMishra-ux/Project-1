@@ -1,0 +1,37 @@
+# ── Stage 1: dependency installer ─────────────────────────────────────────────
+FROM python:3.12-slim AS builder
+
+# Install uv (fast Python package manager)
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /app
+
+# Copy dependency manifests first (better layer caching)
+COPY pyproject.toml uv.lock ./
+
+# Install all dependencies into /app/.venv
+RUN uv sync --frozen --no-dev
+
+# ── Stage 2: runtime image ─────────────────────────────────────────────────────
+FROM python:3.12-slim AS runtime
+
+# Install uv in runtime stage too (needed to run `uv run`)
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /usr/local/bin/uv
+
+WORKDIR /app
+
+# Bring the pre-built venv from builder
+COPY --from=builder /app/.venv /app/.venv
+
+# Copy application source
+COPY main.py server.py processor_embedding.py processor_llm.py processor_regex.py ./
+COPY model/ ./model/
+#COPY resources/ ./resources/
+
+# uv will use the pre-built .venv
+ENV PATH="/app/.venv/bin:$PATH"
+ENV PYTHONUNBUFFERED=1
+
+EXPOSE 8000
+
+CMD ["uvicorn", "server:app", "--host", "0.0.0.0", "--port", "8000"]

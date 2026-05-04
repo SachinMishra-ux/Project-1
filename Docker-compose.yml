@@ -1,0 +1,40 @@
+services:
+
+  # ── FastAPI backend ──────────────────────────────────────────────────────────
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile.backend
+    image: loglens-backend:latest
+    container_name: loglens-backend
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env                   # injects GROQ_API_KEY at runtime (never baked into image)
+    volumes:
+      - ./resources:/app/resources   # persists output CSVs on the host
+    restart: unless-stopped
+    healthcheck:
+      # python:3.12-slim has no curl — use the stdlib urllib instead
+      test: ["CMD", "python", "-c",
+             "import urllib.request; urllib.request.urlopen('http://localhost:8000/docs', timeout=5)"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+  # ── Streamlit frontend ───────────────────────────────────────────────────────
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    image: loglens-frontend:latest
+    container_name: loglens-frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - API_BASE=http://backend:8000    # internal Docker network address
+    depends_on:
+      backend:
+        condition: service_healthy
+    restart: unless-stopped

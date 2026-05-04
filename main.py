@@ -1,6 +1,6 @@
-from src.processor_regex import classifiy_with_regex
-from src.processor_embedding import classify_with_embedding
-from src.processor_llm import classify_with_llm
+from processor_regex import classifiy_with_regex
+from processor_embedding import classify_with_embedding
+from processor_llm import classify_with_llm
 import pandas as pd
 
 
