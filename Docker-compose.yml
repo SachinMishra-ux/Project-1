@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.backend
-    image: loglens-backend:latest
+    image: ${BACKEND_IMAGE:-loglens-backend:latest}
     container_name: loglens-backend
     ports:
       - "8000:8000"
@@ -28,7 +28,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    image: loglens-frontend:latest
+    image: ${FRONTEND_IMAGE:-loglens-frontend:latest}
     container_name: loglens-frontend
     ports:
       - "8501:8501"
