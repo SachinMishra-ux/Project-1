@@ -140,4 +140,4 @@ The output will be a CSV file with an additional column `target_label`, which re
    - AWS_SECRET_ACCESS_KEY
    - AWS_DEFAULT_REGION
    - ECR_REPO_NAME
-   - GROQ_API_KEY
+   - GROQ_API_KEY - don't for get this 
