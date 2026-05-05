@@ -2,7 +2,7 @@ import joblib
 from sentence_transformers import SentenceTransformer
 
 model_embedding= SentenceTransformer('sentence-transformers/all-MiniLM-L6-v2')
-model_classification= joblib.load('/Users/sachinmishra/Desktop/Project-1/model/log_classifier.joblib')
+model_classification= joblib.load('model/log_classifier.joblib')
 
 def classify_with_embedding(log_message):
     embedding= model_embedding.encode([log_message])
